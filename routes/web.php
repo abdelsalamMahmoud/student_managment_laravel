@@ -3,6 +3,8 @@
 use App\Http\Controllers\backend\CourseController;
 use App\Http\Controllers\backend\DashboardController;
 use App\Http\Controllers\backend\UserController;
+use App\Http\Controllers\frontend\StudentController;
+use App\Http\Controllers\frontend\TeacherController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -28,12 +30,43 @@ Route::group(['middleware' => ['is_admin']],function (){
     Route::put('/courses/update/{id}', [CourseController::class, 'update'])->name('courses.update');
     Route::get('/courses/delete/{id}', [CourseController::class, 'delete'])->name('courses.delete');
 
-
     //Users
     Route::get('/users/index', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/update/{id}', [UserController::class, 'update'])->name('users.update');
     Route::get('/users/delete/{id}', [UserController::class, 'delete'])->name('users.delete');
+});
+
+//START TEACHER ROUTES
+Route::group(['middleware' => ['is_teacher']],function (){
+
+    //dashboard
+    Route::get('/teacher/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
+
+    //Courses
+//    Route::get('/courses/index', [CourseController::class, 'index'])->name('courses.index');
+//    Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create');
+//    Route::post('/courses/store', [CourseController::class, 'store'])->name('courses.store');
+//    Route::get('/courses/edit/{id}', [CourseController::class, 'edit'])->name('courses.edit');
+//    Route::put('/courses/update/{id}', [CourseController::class, 'update'])->name('courses.update');
+//    Route::get('/courses/delete/{id}', [CourseController::class, 'delete'])->name('courses.delete');
+
+});
+
+//START TEACHER ROUTES
+Route::group(['middleware' => ['is_student']],function (){
+
+    //dashboard
+    Route::get('/student/dashboard', [StudentController::class, 'index'])->name('student.dashboard');
+
+    //Courses
+//    Route::get('/courses/index', [CourseController::class, 'index'])->name('courses.index');
+//    Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create');
+//    Route::post('/courses/store', [CourseController::class, 'store'])->name('courses.store');
+//    Route::get('/courses/edit/{id}', [CourseController::class, 'edit'])->name('courses.edit');
+//    Route::put('/courses/update/{id}', [CourseController::class, 'update'])->name('courses.update');
+//    Route::get('/courses/delete/{id}', [CourseController::class, 'delete'])->name('courses.delete');
+
 });
 
 
