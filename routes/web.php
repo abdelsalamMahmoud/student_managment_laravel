@@ -1,18 +1,10 @@
 <?php
 
+use App\Http\Controllers\backend\CourseController;
+use App\Http\Controllers\backend\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,7 +12,24 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+
+//START ADMIN ROUTES
+Route::group(['middleware' => ['is_admin']],function (){
+
+    //dashboard
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+    //Courses
+    Route::get('/courses/index', [CourseController::class, 'index'])->name('courses.index');
+    Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create');
+    Route::post('/courses/store', [CourseController::class, 'store'])->name('courses.store');
+    Route::get('/courses/edit/{id}', [CourseController::class, 'edit'])->name('courses.edit');
+    Route::put('/courses/update/{id}', [CourseController::class, 'update'])->name('courses.update');
+    Route::get('/courses/delete/{id}', [CourseController::class, 'delete'])->name('courses.delete');
+
+});
+
+
 
 Route::get('/profile', 'ProfileController@index')->name('profile');
 Route::put('/profile', 'ProfileController@update')->name('profile.update');
