@@ -38,18 +38,17 @@ Route::group(['middleware' => ['is_admin']],function (){
 });
 
 //START TEACHER ROUTES
-Route::group(['middleware' => ['is_teacher']],function (){
+Route::group(['prefix'=>'/teacher','middleware' => ['is_teacher']],function (){
 
     //dashboard
-    Route::get('/teacher/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
+    Route::get('/dashboard', [TeacherController::class, 'index'])->name('teacher.dashboard');
 
     //Courses
-//    Route::get('/courses/index', [CourseController::class, 'index'])->name('courses.index');
-//    Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create');
-//    Route::post('/courses/store', [CourseController::class, 'store'])->name('courses.store');
-//    Route::get('/courses/edit/{id}', [CourseController::class, 'edit'])->name('courses.edit');
-//    Route::put('/courses/update/{id}', [CourseController::class, 'update'])->name('courses.update');
-//    Route::get('/courses/delete/{id}', [CourseController::class, 'delete'])->name('courses.delete');
+    Route::get('/courses/create', [CourseController::class, 'create'])->name('teacher.courses.create');
+    Route::post('/courses/store', [CourseController::class, 'store'])->name('teacher.courses.store');
+    Route::get('/courses/edit/{id}', [CourseController::class, 'edit'])->name('teacher.courses.edit');
+    Route::put('/courses/update/{id}', [CourseController::class, 'update'])->name('teacher.courses.update');
+    Route::get('/courses/delete/{id}', [CourseController::class, 'delete'])->name('teacher.courses.delete');
 
 });
 
