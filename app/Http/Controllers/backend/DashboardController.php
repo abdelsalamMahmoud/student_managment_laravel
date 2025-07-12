@@ -7,7 +7,7 @@ use App\Models\Course;
 use App\Models\Registration;
 use App\Models\User;
 
-class HomeController extends Controller
+class DashboardController extends Controller
 {
     public function __construct()
     {

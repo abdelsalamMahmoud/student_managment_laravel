@@ -12,12 +12,12 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::with('teacher')->paginate(10);
-        return view('courses.index', compact('courses'));
+        return view('dashboard.courses.index', compact('courses'));
     }
 
     public function create()
     {
-        return view('courses.create');
+        return view('dashboard.courses.create');
     }
 
     public function store(StoreCourseRequest $request)
@@ -38,14 +38,14 @@ class CourseController extends Controller
     public function edit($id)
     {
         $course = Course::findOrFail($id);
-        return view('courses.edit',compact('course'));
+        return view('dashboard.courses.edit',compact('course'));
     }
 
     public function update(UpdateCourseRequest $request , $id)
     {
         try{
-            $post = Course::findOrFail($id);
-            $post->update([
+            $course = Course::findOrFail($id);
+            $course->update([
                 'title'=>$request->input('title'),
                 'description'=>$request->input('description'),
                 'capacity'=>$request->input('capacity'),

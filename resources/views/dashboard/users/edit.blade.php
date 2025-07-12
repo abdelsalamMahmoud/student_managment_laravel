@@ -3,7 +3,7 @@
 @section('main-content')
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">Create Course</h1>
+    <h1 class="h3 mb-4 text-gray-800">Update User</h1>
 
     @if (session('success'))
         <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
@@ -21,23 +21,19 @@
     @endif
 
     <div class="row">
-        <form class="w-75 m-auto" method="post" action="{{route('courses.update',$course->id)}}">
+        <form class="w-75 m-auto" method="post" action="{{route('users.update',$user->id)}}">
             @csrf
             @method('PUT')
             <div class="form-group">
-                <label for="title">Title</label>
-                <input type="text" class="form-control" id="title" placeholder="course title" name="title" value="{{$course['title']}}">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{$user['name']}}">
             </div>
 
             <div class="form-group">
-                <label for="capacity">Capacity</label>
-                <input type="text" class="form-control" id="capacity" placeholder="course title" name="capacity" value="{{$course['capacity']}}">
+                <label for="last_name">Last Name</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" value="{{$user['last_name']}}">
             </div>
 
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea class="form-control" id="description" rows="3" name="description">{{$course['description']}}</textarea>
-            </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>

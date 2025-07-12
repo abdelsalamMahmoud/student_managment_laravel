@@ -53,16 +53,10 @@
                 <span>{{ __('Courses') }}</span></a>
         </li>
 
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('home') }}">
+        <li class="nav-item {{ Nav::isRoute('users.index') }}">
+            <a class="nav-link" href="{{ route('users.index') }}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>{{ __('Teachers') }}</span></a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('home') }}">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>{{ __('Students') }}</span></a>
+                <span>{{ __('Users') }}</span></a>
         </li>
 
         <!-- Divider -->

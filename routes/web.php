@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\backend\CourseController;
-use App\Http\Controllers\backend\HomeController;
+use App\Http\Controllers\backend\DashboardController;
+use App\Http\Controllers\backend\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +18,7 @@ Auth::routes();
 Route::group(['middleware' => ['is_admin']],function (){
 
     //dashboard
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/home', [DashboardController::class, 'index'])->name('home');
 
     //Courses
     Route::get('/courses/index', [CourseController::class, 'index'])->name('courses.index');
@@ -27,6 +28,12 @@ Route::group(['middleware' => ['is_admin']],function (){
     Route::put('/courses/update/{id}', [CourseController::class, 'update'])->name('courses.update');
     Route::get('/courses/delete/{id}', [CourseController::class, 'delete'])->name('courses.delete');
 
+
+    //Users
+    Route::get('/users/index', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/update/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::get('/users/delete/{id}', [UserController::class, 'delete'])->name('users.delete');
 });
 
 
