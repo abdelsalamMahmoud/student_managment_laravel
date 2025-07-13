@@ -3,7 +3,7 @@
 @section('main-content')
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">{{ __('Student Dashboard') }}</h1>
+    <h1 class="h3 mb-4 text-gray-800">Assignments of {{$course->title}}</h1>
 
     @if (session('success'))
         <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
@@ -25,36 +25,33 @@
             <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">title</th>
-                <th scope="col">description</th>
-                <th scope="col">capacity</th>
-                <th scope="col">Teacher</th>
-                <th scope="col">Enroll ?</th>
+                <th scope="col">Name</th>
+                <th scope="col">Download ?</th>
             </tr>
             </thead>
             <tbody>
-            @forelse($courses as $course)
+            @forelse($assignments as $assignment)
                 <tr>
                     <th scope="row">{{ $loop->iteration }}</th>
-                    <td>{{ $course->title }}</td>
-                    <td>{{ $course->description }}</td>
-                    <td>{{ $course->capacity }}</td>
-                    <td>{{$course->teacher->name}}</td>
+                    <td>{{ $assignment->name }}</td>
                     <td>
-                        <a class="btn btn-secondary" href="{{route('student.enroll.course',$course->id)}}">Enroll</a>
+                        <a href="{{ asset('storage/' . $assignment->path) }}" class="btn btn-primary" target="_blank" download>
+                            Download
+                        </a>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="text-center text-muted">No courses yet.</td>
+                    <td colspan="6" class="text-center text-muted">No Assignments yet.</td>
                 </tr>
             @endforelse
             </tbody>
         </table>
 
-        {{ $courses->links() }}
+        {{ $assignments->links() }}
 
     </div>
 
 @endsection
+
 

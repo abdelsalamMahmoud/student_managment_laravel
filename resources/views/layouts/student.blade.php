@@ -30,34 +30,28 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/home') }}">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('student.dashboard') }}">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
-            <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+            <div class="sidebar-brand-text mx-3">STUDENT</div>
         </a>
 
         <!-- Divider -->
         <hr class="sidebar-divider my-0">
 
         <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link" href="">
+        <li class="nav-item {{ Nav::isRoute('student.dashboard') }}">
+            <a class="nav-link" href="{{route('student.dashboard')}}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>{{ __('Studentoooo') }}</span></a>
+                <span>All Courses</span></a>
         </li>
 
-        {{--        <li class="nav-item {{ Nav::isRoute('courses.index') }}">--}}
-        {{--            <a class="nav-link" href="{{ route('courses.index') }}">--}}
-        {{--                <i class="fas fa-fw fa-tachometer-alt"></i>--}}
-        {{--                <span>{{ __('Courses') }}</span></a>--}}
-        {{--        </li>--}}
-
-        {{--        <li class="nav-item {{ Nav::isRoute('users.index') }}">--}}
-        {{--            <a class="nav-link" href="{{ route('users.index') }}">--}}
-        {{--                <i class="fas fa-fw fa-tachometer-alt"></i>--}}
-        {{--                <span>{{ __('Users') }}</span></a>--}}
-        {{--        </li>--}}
+        <li class="nav-item {{Nav::isRoute('student.courses')}}">
+                    <a class="nav-link" href="{{route('student.courses')}}">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>{{ __('My Courses') }}</span></a>
+        </li>
 
         <!-- Sidebar Toggler (Sidebar) -->
         <div class="text-center d-none d-md-inline">

@@ -57,19 +57,14 @@ Route::group(['prefix'=>'/teacher','middleware' => ['is_teacher']],function (){
 });
 
 //START TEACHER ROUTES
-Route::group(['middleware' => ['is_student']],function (){
+Route::group(['prefix'=>'student','middleware' => ['is_student']],function (){
 
     //dashboard
-    Route::get('/student/dashboard', [StudentController::class, 'index'])->name('student.dashboard');
+    Route::get('/dashboard', [StudentController::class, 'index'])->name('student.dashboard');
 
-    //Courses
-//    Route::get('/courses/index', [CourseController::class, 'index'])->name('courses.index');
-//    Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create');
-//    Route::post('/courses/store', [CourseController::class, 'store'])->name('courses.store');
-//    Route::get('/courses/edit/{id}', [CourseController::class, 'edit'])->name('courses.edit');
-//    Route::put('/courses/update/{id}', [CourseController::class, 'update'])->name('courses.update');
-//    Route::get('/courses/delete/{id}', [CourseController::class, 'delete'])->name('courses.delete');
-
+    Route::get('/courses', [StudentController::class, 'get_enrolled_courses'])->name('student.courses');
+    Route::get('/enroll/course/{course_id}', [StudentController::class, 'enroll_course'])->name('student.enroll.course');
+    Route::get('/assignments/{course_id}', [StudentController::class, 'get_assignments'])->name('student.assignments');
 });
 
 

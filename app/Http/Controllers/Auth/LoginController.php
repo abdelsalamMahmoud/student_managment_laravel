@@ -16,7 +16,7 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    // Override redirectTo method
+
     protected function redirectTo()
     {
         $user = Auth::user();
