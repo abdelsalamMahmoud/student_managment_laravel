@@ -3,6 +3,8 @@
 use App\Http\Controllers\backend\CourseController;
 use App\Http\Controllers\backend\DashboardController;
 use App\Http\Controllers\backend\UserController;
+use App\Http\Controllers\frontend\AssignmentController;
+use App\Http\Controllers\frontend\GradeController;
 use App\Http\Controllers\frontend\StudentController;
 use App\Http\Controllers\frontend\TeacherController;
 use Illuminate\Support\Facades\Auth;
@@ -52,9 +54,13 @@ Route::group(['prefix'=>'/teacher','middleware' => ['is_teacher']],function (){
 
     Route::get('/course/students/{course_id}', [CourseController::class, 'enrolled_students'])->name('teacher.enrolled.students');
 
+    //Grades
+    Route::get('/create/{student_id}/grade/{course_id}', [GradeController::class, 'create'])->name('create.grade');
+    Route::post('/store/{student_id}/grade/{course_id}', [GradeController::class, 'store'])->name('store.grade');
+
     //ASSIGNMENTS
-    Route::get('/create/assignments/{course_id}', [TeacherController::class, 'create_assignment'])->name('create.assignment');
-    Route::post('/store/assignment/{course_id}', [TeacherController::class, 'store_assignment'])->name('store.assignment');
+    Route::get('/create/assignments/{course_id}', [AssignmentController::class, 'create'])->name('create.assignment');
+    Route::post('/store/assignment/{course_id}', [AssignmentController::class, 'store'])->name('store.assignment');
 
 });
 

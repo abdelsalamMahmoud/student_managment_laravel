@@ -37,7 +37,7 @@
                     <td>{{ $student->name}}</td>
                     <td>{{ $student->email }}</td>
                     <td>
-                        <a class="btn btn-secondary" href="{{ route('teacher.courses.edit', $course->id) }}">Add Grade</a>
+                        <a class="btn btn-secondary" href="{{ route('create.grade', ['student_id' => $student->id, 'course_id' => $course->id]) }}">Add Grade</a>
                     </td>
                 </tr>
             @empty
