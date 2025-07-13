@@ -41,22 +41,4 @@ class RegisterController extends Controller
             'password' => $data['password'],
         ]);
     }
-
-    protected function redirectTo()
-    {
-        $user = Auth::user();
-        session()->flash('success', 'You are logged in!');
-
-        // Role-based redirection
-        switch ($user->role) {
-            case 'admin':
-                return route('home');
-            case 'teacher':
-                return route('teacher.dashboard');
-            case 'student':
-                return route('student.dashboard');
-            default:
-                return '/';
-        }
-    }
 }
