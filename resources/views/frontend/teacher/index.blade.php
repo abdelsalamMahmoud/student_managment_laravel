@@ -30,6 +30,7 @@
                 <th scope="col">description</th>
                 <th scope="col">capacity</th>
                 <th scope="col">Assignments</th>
+                <th scope="col">Students</th>
                 <th scope="col">actions</th>
             </tr>
             </thead>
@@ -41,6 +42,9 @@
                     <td>{{ $course->description }}</td>
                     <td>{{ $course->capacity }}</td>
                     <td><a class="btn btn-primary" href="{{route('create.assignment',$course->id)}}">Upload</a></td>
+                    <td>
+                        <a class="btn btn-warning" href="{{ route('teacher.enrolled.students', $course->id) }}">Show</a>
+                    </td>
                     <td>
                         <a class="btn btn-secondary" href="{{ route('teacher.courses.edit', $course->id) }}">Edit</a>
                         <a class="btn btn-danger" href="{{ route('teacher.courses.delete', $course->id) }}">Delete</a>

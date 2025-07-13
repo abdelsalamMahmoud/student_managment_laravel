@@ -50,6 +50,8 @@ Route::group(['prefix'=>'/teacher','middleware' => ['is_teacher']],function (){
     Route::put('/courses/update/{id}', [CourseController::class, 'update'])->name('teacher.courses.update');
     Route::get('/courses/delete/{id}', [CourseController::class, 'delete'])->name('teacher.courses.delete');
 
+    Route::get('/course/students/{course_id}', [CourseController::class, 'enrolled_students'])->name('teacher.enrolled.students');
+
     //ASSIGNMENTS
     Route::get('/create/assignments/{course_id}', [TeacherController::class, 'create_assignment'])->name('create.assignment');
     Route::post('/store/assignment/{course_id}', [TeacherController::class, 'store_assignment'])->name('store.assignment');

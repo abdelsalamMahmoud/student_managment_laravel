@@ -135,4 +135,16 @@ class CourseController extends Controller
         }
     }
 
+    public function enrolled_students($course_id)
+    {
+        $course = Course::with('students')->findOrFail($course_id);
+
+        if ($course->teacher_id !== auth()->user()->id) {
+            abort(403, 'You do not have access to this course.');
+        }
+
+        return view('frontend.teacher.courses.students',compact('course'));
+
+    }
+
 }
