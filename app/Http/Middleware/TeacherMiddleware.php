@@ -18,6 +18,6 @@ class TeacherMiddleware
         if(auth()->user()->role == 'teacher'){
             return $next($request);
         }
-        else return response()->json('you are not an admin');
+        else return response()->json('you are not a teacher');
     }
 }

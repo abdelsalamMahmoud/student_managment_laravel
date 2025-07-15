@@ -8,16 +8,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class StudentMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
         if(auth()->user()->role == 'student' ){
             return $next($request);
         }
-        else return response()->json('you are not an student');
+        else return response()->json('you are not a student');
     }
 }

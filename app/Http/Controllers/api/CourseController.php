@@ -14,19 +14,23 @@ class CourseController extends Controller
 {
     use ApiResopnseTrait;
 
-//    protected $role;
+    protected $role;
 
-//    public function __construct()
-//    {
-//        $this->middleware(function ($request, $next) {
-//            $this->role = auth()->check() ? auth()->user()->role : null;
-//            return $next($request);
-//        });
-//    }
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $this->role = auth()->check() ? auth()->user()->role : null;
+            return $next($request);
+        });
+    }
 
     public function index()
     {
         $courses = CourseResource::collection(Course::with('teacher')->paginate(10));
+        if(!$courses)
+        {
+            return $this->apiResponse(null, 'There are no courses', 203);
+        }
         return $this->apiResponse($courses, 'These are all courses', 200);
     }
 
@@ -36,22 +40,19 @@ class CourseController extends Controller
             $course = new CourseResource(Course::findOrFail($id));
             return $this->apiResponse($course, 'This is the course', 200);
         } catch (\Exception $e) {
-            return $this->apiResponse(null, 'something went wrong', 200);
+            return $this->apiResponse(null, 'something went wrong', 500);
         }
     }
 
     public function store(StoreCourseRequest $request)
     {
         try {
-            $course = Course::create([
-                'title'       => $request->title,
-                'description' => $request->description,
-                'capacity'    => $request->capacity,
-                'teacher_id'  => auth()->id(),
-            ]);
+            $data = $request->except(['_token']);
+            $data['teacher_id'] = auth()->user()->id;
+            $course = Course::create($data);
             return $this->apiResponse($course, 'course created successfully', 201);
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return $this->apiResponse(null, 'something went wrong', 500);
         }
     }
 
@@ -61,13 +62,13 @@ class CourseController extends Controller
             $course = Course::findOrFail($id);
             if(!$course)
             {
-                return $this->apiResponse(null, 'course not exist', 404);
+                return $this->apiResponse(null, 'course not exist', 203);
             }
             $course->update($request->all());
 
             return $this->apiResponse($course, 'course updated successfully', 200);
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return $this->apiResponse(null, 'something went wrong', 500);
         }
     }
 
@@ -78,20 +79,20 @@ class CourseController extends Controller
             $course->delete();
             return $this->apiResponse(null, 'course deleted successfully', 200);
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return $this->apiResponse(null, 'something went wrong', 500);
         }
     }
 
-    public function enrolled_students($course_id)
-    {
-        $course = Course::with('students')->findOrFail($course_id);
-
-        if ($course->teacher_id !== auth()->user()->id) {
-            abort(403, 'You do not have access to this course.');
-        }
-
-        return view('frontend.teacher.courses.students',compact('course'));
-
-    }
+//    public function enrolled_students($course_id)
+//    {
+//        $course = Course::with('students')->findOrFail($course_id);
+//
+//        if ($course->teacher_id !== auth()->user()->id) {
+//            abort(403, 'You do not have access to this course.');
+//        }
+//
+//        return view('frontend.teacher.courses.students',compact('course'));
+//
+//    }
 
 }
