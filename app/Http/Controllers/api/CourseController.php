@@ -36,7 +36,7 @@ class CourseController extends Controller
             $course = new CourseResource(Course::findOrFail($id));
             return $this->apiResponse($course, 'This is the course', 200);
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return $this->apiResponse(null, 'something went wrong', 200);
         }
     }
 
@@ -59,11 +59,11 @@ class CourseController extends Controller
     {
         try {
             $course = Course::findOrFail($id);
-            $course->update([
-                    'title'       => $request->title,
-                    'description' => $request->description,
-                    'capacity'    => $request->capacity,
-            ]);
+            if(!$course)
+            {
+                return $this->apiResponse(null, 'course not exist', 404);
+            }
+            $course->update($request->all());
 
             return $this->apiResponse($course, 'course updated successfully', 200);
         } catch (\Exception $e) {

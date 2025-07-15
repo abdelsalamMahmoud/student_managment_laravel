@@ -18,6 +18,6 @@ class StudentMiddleware
         if(auth()->user()->role == 'student' ){
             return $next($request);
         }
-        else return response()->json('you are not an admin');
+        else return response()->json('you are not an student');
     }
 }
