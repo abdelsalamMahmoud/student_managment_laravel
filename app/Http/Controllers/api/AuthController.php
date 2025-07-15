@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\LoginUserRequest;
+use App\Http\Requests\Api\RegisterUserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,87 +14,58 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AuthController extends Controller
 {
+    use ApiResopnseTrait;
 
-    public function __construct() {
-        $this->middleware('auth:api', ['except' => ['login', 'signup']]);
-    }
-
-    public function login(Request $request)
+    public function login(LoginUserRequest $request)
     {
 
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:users',
-            'password' => 'required|string|min:6'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+        $request->validated($request->all());
+        if (!Auth::attempt($request->only('email','password')))
+        {
+            return $this->apiResponse(null,'invalid credentials',401);
         }
-
-        $user = User::query()->where('email', $request->email)->first();
-
-        $token = auth('api')->login($user);
-
-        return $this->createNewToken($token);
-
+        $user = User::firstWhere('email',$request->email);
+        $token = $user->createToken('API token for ' . $user->email)->plainTextToken;
+        return $this->apiResponse([
+            'token'=> $token
+        ],
+            'Authenticated',
+            200);
     }
 
-    public function signup(Request $request)
+    public function register(RegisterUserRequest $request)
     {
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
-        ]);
-
         $user = User::create([
             'name' => $request->name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        $token = auth('api')->login($user);
+        $token = $user->createToken('API token for ' . $user->email)->plainTextToken;
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User created successfully',
-            'user' => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
-        ]);
+        return $this->apiResponse([
+            'token' => $token,
+        ], 'User registered successfully', 201);
     }
 
-    public function logout(): JsonResponse
+
+
+    public function logout(Request $request)
     {
-        auth('api')->logout();
-        return response()->json(['message' => 'User is logged out']);
+        $request->user()->currentAccessToken()->delete();
+        return $this->apiResponse(null, 'Logged out successfully', 200);
     }
 
-    public function refresh()
+    public function refreshToken(Request $request)
     {
-        return response()->json([
-            'status' => 'success',
-            'user' => Auth::user(),
-            'authorisation' => [
-                'token' => Auth::refresh(),
-                'type' => 'bearer',
-            ]
-        ]);
-    }
+        $user = $request->user();
+        $request->user()->currentAccessToken()->delete();
+        $newToken = $user->createToken('API token for ' . $user->email)->plainTextToken;
 
-    protected function createNewToken($token)
-    {
-        $user = auth('api')->user();
-
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => $user
-        ]);
+        return $this->apiResponse([
+            'token' => $newToken
+        ], 'Token refreshed', 200);
     }
 
 }

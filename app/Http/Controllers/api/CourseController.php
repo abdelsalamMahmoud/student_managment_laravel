@@ -47,7 +47,7 @@ class CourseController extends Controller
                 'title'       => $request->title,
                 'description' => $request->description,
                 'capacity'    => $request->capacity,
-                'teacher_id'  => 1,
+                'teacher_id'  => auth()->id(),
             ]);
             return $this->apiResponse($course, 'course created successfully', 201);
         } catch (\Exception $e) {

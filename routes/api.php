@@ -20,13 +20,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware' => 'api','prefix' => 'auth'], function () {
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/register', [AuthController::class, 'signup']);
-    Route::post('/logout', [AuthController::class, 'logout']);
+Route::prefix('auth')->group(function () {
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register']);
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('logout', [AuthController::class, 'logout']);
+        Route::post('refresh', [AuthController::class, 'refreshToken']);
+    });
 });
 
-Route::group(['prefix' => 'courses'],function (){
+Route::group(['middleware'=>'auth:sanctum','prefix' => 'courses'],function (){
     //Courses
     Route::get('/index', [CourseController::class, 'index']);
     Route::get('/show/{id}', [CourseController::class, 'show']);
