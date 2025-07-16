@@ -27,4 +27,5 @@ Route::group(['middleware'=>['auth:sanctum'],'prefix' => 'courses'],function (){
     Route::post('/store', [CourseController::class, 'store']);
     Route::patch('/update/{id}', [CourseController::class, 'update']);
     Route::delete('/delete/{id}', [CourseController::class, 'delete']);
+    Route::get('/students/{course_id}', [CourseController::class, 'enrolled_students']);
 });

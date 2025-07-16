@@ -5,10 +5,8 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseApiRequest;
-use App\Http\Requests\UpdateCourseRequest;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
-use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
@@ -59,40 +57,77 @@ class CourseController extends Controller
     public function update(UpdateCourseApiRequest $request, $id)
     {
         try {
-            $course = Course::findOrFail($id);
+            $course = Course::find($id);
+
             if(!$course)
             {
                 return $this->apiResponse(null, 'course not exist', 203);
             }
-            $course->update($request->all());
 
-            return $this->apiResponse($course, 'course updated successfully', 200);
+            if ($this->role === 'admin') {
+                $course->update($request->all());
+            } elseif ($this->role === 'teacher') {
+                if ($course->teacher_id !== auth()->id()) {
+                    abort(403, 'You are not allowed to update this course.');
+                }
+                $course->update($request->all());
+            } else {
+                return $this->apiResponse(null, 'Unauthorized role', 403);
+            }
+
+            return $this->apiResponse($course, 'Course updated successfully', 200);
+
         } catch (\Exception $e) {
-            return $this->apiResponse(null, 'something went wrong', 500);
+            return $this->apiResponse(null, 'Something went wrong', 500);
         }
     }
 
     public function delete($id)
     {
         try {
-            $course = Course::findOrFail($id);
-            $course->delete();
-            return $this->apiResponse(null, 'course deleted successfully', 200);
+            $course = Course::find($id);
+
+            if(!$course)
+            {
+                return $this->apiResponse(null, 'course not exist', 203);
+            }
+
+            if ($this->role === 'admin') {
+                $course->delete();
+            } elseif ($this->role === 'teacher') {
+                if ($course->teacher_id !== auth()->id()) {
+                    abort(403, 'You are not allowed to delete this course.');
+                }
+                $course->delete();
+            } else {
+                return $this->apiResponse(null, 'Unauthorized role', 403);
+            }
+
+            return $this->apiResponse(null, 'Course deleted successfully', 200);
         } catch (\Exception $e) {
-            return $this->apiResponse(null, 'something went wrong', 500);
+            return $this->apiResponse(null, 'Something went wrong', 500);
         }
     }
 
-//    public function enrolled_students($course_id)
-//    {
-//        $course = Course::with('students')->findOrFail($course_id);
-//
-//        if ($course->teacher_id !== auth()->user()->id) {
-//            abort(403, 'You do not have access to this course.');
-//        }
-//
-//        return view('frontend.teacher.courses.students',compact('course'));
-//
-//    }
+    public function enrolled_students($course_id)
+    {
+        try {
+            $course = Course::with('students')->find($course_id);
+
+            if(!$course)
+            {
+                return $this->apiResponse(null, 'course not exist', 203);
+            }
+
+            if ($course->teacher_id !== auth()->id()) {
+                return $this->apiResponse(null, 'You do not have access to this course.', 403);
+            }
+
+            return $this->apiResponse($course->students, 'Enrolled students retrieved successfully', 200);
+
+        }catch (\Exception $e) {
+            return $this->apiResponse(null, 'Something went wrong', 500);
+        }
+    }
 
 }
